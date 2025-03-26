@@ -8,7 +8,7 @@ import { TokenService } from "./service/jwt.service";
 @Module({
   imports: [MailModule],
   providers: [AuthService, CacheService , TokenService],
-  exports: [AuthService, CacheService],
+  exports: [AuthService, CacheService , TokenService],
   controllers: [AuthController]
 })
 

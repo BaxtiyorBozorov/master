@@ -24,6 +24,7 @@ export class TokenService {
 
   // Qo'shimcha: Tokenni deshifrlash uchun metod
   async decryptToken(token: string): Promise<Record<string, any>> {
+    
       const { payload } = await jose.jwtDecrypt(token, this.secretKey);
       return payload;
   

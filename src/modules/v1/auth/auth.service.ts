@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { BaseService } from 'src/common/utils/base.service';
 import { comparePassword, generateHashedPassword } from 'src/common/utils/bycrypt.functions';
+import db from 'src/config/database.config';
 import { MailService } from '../mail/mail.service';
 import { LoginDto } from './dto/login-dto';
 import { RegisterDto, SignupDto } from './dto/signup-dto';
@@ -50,11 +51,15 @@ export class AuthService extends BaseService<UserInterface> {
     return true;
   }
 
-  async createUser(dto: RegisterDto): Promise<UserInterface> {
+  async createUser(dto: RegisterDto): Promise<Partial<UserInterface> & {token : string}> {
     dto.password = await generateHashedPassword(dto.password)
     console.log(dto.password);
+    const user = await this.create(dto)
+    if (user.role === 'master') await db('masters').insert({ user_id: user.id })
     
-    return this.create(dto);
+    const token = await this.tokeService.generateEncryptedToken({ id: user.id, role: user.role, email: user.email })
+    
+    return {id: user.id, role: user.role, email: user.email ,phone: user.phone, token}
   }
 
   async login(dto: LoginDto): Promise<object> {

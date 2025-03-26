@@ -18,15 +18,15 @@ export class BaseService<T> {
         return await db(this.tableName).where(query).first();
     }
 
-    async findById(id: string): Promise<T | null> {
+    async findById(id: number): Promise<T | null> {
         return await db(this.tableName).where({ id: id }).first();
     }
 
-    async update(id: string, data: Partial<T>): Promise<number> {
+    async update(id: number, data: Partial<T>): Promise<number> {
         return await db(this.tableName).where({ id }).update(data);
     }
 
-    async delete(id: string): Promise<number> {
+    async delete(id: number): Promise<number> {
         return await db(this.tableName).where({ id }).del();
     }
 }
