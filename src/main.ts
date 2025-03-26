@@ -14,7 +14,13 @@ async function bootstrap() {
         .addTag('API')
         .build();
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api', app, document);
+  
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: '*',
+  });
 
   app.useGlobalFilters(new HttpExceptionFilter(), new AllExcetionsFilter());
   await app.listen(process.env.PORT ?? 3000);
