@@ -1,8 +1,9 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, ValidationPipe } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse } from 'src/common/swagger/common-errors';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login-dto';
 import { RegisterDto, SignupDto, VerifyOtpDto } from './dto/signup-dto';
+import { UserInterface } from './entity/user-interface';
 
 @Controller('v1/auth')
   // @ApiBadRequestResponse()
@@ -32,8 +33,12 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body(new ValidationPipe()) dto: LoginDto) {
-    return this.authService.login(dto);
+    const token = await this.authService.login(dto)
+    const userData = await this.authService.getMe(dto.email)
+    return { status : "success", message: "Login successful", ...token, userData };
   }
+
+  
 
  
 }

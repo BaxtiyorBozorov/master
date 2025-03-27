@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Put,
@@ -16,7 +17,7 @@ import {
   ApiUnauthorizedResponse,
 } from 'src/common/swagger/common-errors';
 import { UserInterface } from '../auth/entity/user-interface';
-import { UpdatePasswordDto, UpdateProfilDto } from './dto/update-profil.dto';
+import { UpdateMasterDto, UpdatePasswordDto, UpdateProfilDto } from './dto/update-profil.dto';
 import { ProfilService } from './profil.service';
 
 @Controller('v1/profil')
@@ -27,6 +28,11 @@ import { ProfilService } from './profil.service';
 @ApiUnauthorizedResponse()
 export class ProfilController {
   constructor(private readonly profilService: ProfilService) {}
+  @Get('me')
+  @HttpCode(HttpStatus.OK)
+  async getMe(@Req() req: Request & { user: UserInterface }) {
+    return this.profilService.getMe(req.user);
+  }
 
   @Put('update')
   @HttpCode(HttpStatus.OK)
@@ -44,5 +50,14 @@ export class ProfilController {
     @Req() req: Request & { user: UserInterface },
   ) {
     return this.profilService.updatePassword(dto, req.user);
+  }
+
+  @Put('update-master')
+  @HttpCode(HttpStatus.OK)
+  async updateMaster(
+    @Body(new ValidationPipe()) dto: UpdateMasterDto,
+    @Req() req: Request & { user: UserInterface },
+  ) {
+    return this.profilService.updateMaster(dto, req.user);
   }
 }
