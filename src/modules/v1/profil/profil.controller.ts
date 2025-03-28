@@ -10,6 +10,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { Roles } from 'src/common/decorator/roles-decorators';
+import { RolesGuard } from 'src/common/guards/auth-role-guard';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth-guard';
 import {
   ApiBadRequestResponse,
@@ -17,12 +19,16 @@ import {
   ApiUnauthorizedResponse,
 } from 'src/common/swagger/common-errors';
 import { UserInterface } from '../auth/entity/user-interface';
-import { UpdateMasterDto, UpdatePasswordDto, UpdateProfilDto } from './dto/update-profil.dto';
+import {
+  UpdateMasterDto,
+  UpdatePasswordDto,
+  UpdateProfilDto,
+} from './dto/update-profil.dto';
 import { ProfilService } from './profil.service';
 
 @Controller('v1/profil')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBadRequestResponse()
 @ApiInternalServerErrorResponse()
 @ApiUnauthorizedResponse()
@@ -53,11 +59,13 @@ export class ProfilController {
   }
 
   @Put('update-master')
+  @Roles('master')
   @HttpCode(HttpStatus.OK)
   async updateMaster(
     @Body(new ValidationPipe()) dto: UpdateMasterDto,
     @Req() req: Request & { user: UserInterface },
   ) {
-    return this.profilService.updateMaster(dto, req.user);
+    await this.profilService.updateMaster(dto, req.user);
+    return { status: 'success', message: 'Master updated successfully' };
   }
 }

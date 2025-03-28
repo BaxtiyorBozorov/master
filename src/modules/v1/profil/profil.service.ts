@@ -82,8 +82,9 @@ export class ProfilService {
   async updateMaster(
     dto: UpdateMasterDto,
     user: UserInterface,
-  ): Promise<{ status: string; message: string }> {
-    await this.authService.update(user.id, dto);
-    return { status: 'success', message: 'Master updated successfully' };
+  ): Promise<void> {
+    const masterData = await db('masters').where('user_id', user.id).first();
+    if (!masterData) throw new BadRequestException('Master not found');
+    await db('masters').where('user_id', user.id).update(dto);
   }
 }

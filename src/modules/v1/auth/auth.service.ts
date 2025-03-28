@@ -87,6 +87,8 @@ export class AuthService extends BaseService<UserInterface> {
     if (!userData) throw new BadRequestException('User not found');
     if (userData.role === 'master') {
       const masterData = await db('masters').where('user_id', userData.id).first();
+      console.log(masterData , 11);
+      
 
       return {
         user_id: userData.id,

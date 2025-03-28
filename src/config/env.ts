@@ -18,6 +18,8 @@ interface EnvConfig {
   REDIS_PORT: string | undefined;
   EMAIL_USER: string | undefined;
   EMAIL_PASS: string | undefined;
+  JWT_PUBLIC_KEY: string | undefined;
+  JWT_PRIVATE_KEY: string | undefined;
 }
 
 export const ENV: EnvConfig = {
@@ -33,4 +35,6 @@ export const ENV: EnvConfig = {
   REDIS_PORT: process.env.REDIS_PORT,
   EMAIL_USER: process.env.EMAIL_USER,
   EMAIL_PASS: process.env.EMAIL_PASS,
+  JWT_PUBLIC_KEY: process.env.JWT_PUBLIC_KEY,
+  JWT_PRIVATE_KEY: process.env.JWT_PRIVATE_KEY,
 };

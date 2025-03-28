@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Matches } from 'class-validator';
 
 export class UpdateProfilDto {
   @IsString()
@@ -57,85 +57,28 @@ export class UpdatePasswordDto {
 }
 
 export class UpdateMasterDto {
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ example: 1, description: 'category_id', type: 'number' })
+  category_id: number;
+  
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ example: 4, description: 'experience', type: 'number' })
+  experience: number;
+  
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ example: 100000, description: 'min_price', type: 'number' })
+  min_price: number;
+  
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ example: 1000000, description: 'max_price', type: 'number' })
+  max_price: number;
+  
   @IsString()
-  @IsOptional()
-  @ApiProperty({ example: 'Baxrom', description: 'firstname', type: 'string' })
-  firstname?: string;
-
-  @IsString()
-  @IsOptional()
-  @ApiProperty({ example: 'Baxrom', description: 'lastname', type: 'string' })
-  lastname?: string;
-
-  @IsString()
-  @IsOptional()
-  @ApiProperty({
-    example: '998991234567',
-    description: 'phone',
-    type: 'string',
-  })
-  phone?: string;
-
-  @IsString()
-  @IsOptional()
-  @ApiProperty({
-    example: '998991234567',
-    description: 'phone',
-    type: 'string',
-  })
-  category_id?: string;
-
-  @IsString()
-  @IsOptional()
-  @ApiProperty({
-    example: '998991234567',
-    description: 'experience',
-    type: 'string',
-  })
-  experience?: string;
-
-  @IsString()
-  @IsOptional()
-  @ApiProperty({
-    example: '998991234567',
-    description: 'phone',
-    type: 'string',
-  })
-  min_price?: string;
-
-  @IsString()
-  @IsOptional()
-  @ApiProperty({
-    example: '998991234567',
-    description: 'phone',
-    type: 'string',
-  })
-  max_price?: string;
-
-  @IsString()
-  @IsOptional()
-  @ApiProperty({
-    example: '998991234567',
-    description: 'phone',
-    type: 'string',
-  })
-  address?: string;
-
-  @IsString()
-  @IsOptional()
-  @ApiProperty({
-    example: '998991234567',
-    description: 'phone',
-    type: 'string',
-  })
-  latitude?: string;
-
-  @IsString()
-  @IsOptional()
-  @ApiProperty({
-    example: '998991234567',
-    description: 'phone',
-    type: 'string',
-  })
-  longitude?: string;
+  @IsNotEmpty()
+  @ApiProperty({ example: 'Uzbekistan Tashkent Amir Temur 1', description: 'address', type: 'string' })
+  address: string;
 }

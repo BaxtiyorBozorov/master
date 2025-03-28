@@ -2,17 +2,17 @@ import type { Knex } from "knex";
 
 
 export async function up(knex: Knex): Promise<void> {
-  return knex.schema.createTable('otps', table => {
+  return knex.schema.createTable('ratings', table => {
     table.increments('id').primary()
-    table.string('email').notNullable()
-    table.string('otp').notNullable()
+    table.integer('master_id').references('masters.id').onDelete('CASCADE')
     table.integer('user_id').references('users.id').onDelete('CASCADE')
+    table.smallint('rating').notNullable()
     table.timestamps(true, true)
   })
 }
 
 
 export async function down(knex: Knex): Promise<void> {
-  return knex.schema.dropTable('otps')
+  return knex.schema.dropTable('ratings')
 }
 

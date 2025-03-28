@@ -16,6 +16,8 @@ export class JwtAuthGuard implements CanActivate {
 
         const payload = await this.tokenService.decryptToken(token);
         const user = await db('users').where({ id: payload.id }).first();
+        console.log(user);
+        
         if (!user) throw new UnauthorizedException('User unauthorized');
         request.user = payload;
         return true;

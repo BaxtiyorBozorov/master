@@ -1,32 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import * as jose from 'jose';
+import { EncryptJWT, importPKCS8, importSPKI, jwtDecrypt } from 'jose';
+import { ENV } from 'src/config/env';
+import { TokenPayloadInterface } from '../entity/interfaceses';
 
 @Injectable()
 export class TokenService {
-  // Maxfiy kalit (real loyihada buni .env faylidan olish tavsiya etiladi)
-  private readonly secretKey = new TextEncoder().encode(
-    process.env.SECRET_KEY || 'a'.repeat(32), // 32 bayt uzunlikdagi kalit
-);
+  private publicKey = ENV.JWT_PUBLIC_KEY || '';
+  private privateKey = ENV.JWT_PRIVATE_KEY || '';
 
-  constructor() { }
-  async generateEncryptedToken(payload: Record<string, any>): Promise<string> {
+  async generateEncryptedToken(
+    payload: TokenPayloadInterface,
+  ): Promise<string> {
+    console.log(this.publicKey);
     
-      const encryptedToken = await new jose.EncryptJWT(payload)
-        .setProtectedHeader({ alg: 'dir', enc: 'A256GCM' }) // Direct kalit va AES 256 GCM
-        .setIssuedAt() // Token yaratilgan vaqt
-        // .setExpirationTime('1d') // Token amal qilish muddati (1 soat)
-        .encrypt(this.secretKey);
-
-    
-      return encryptedToken;
-    
+    const secret = await importSPKI(this.publicKey, 'RSA-OAEP');
+    const token = await new EncryptJWT({ ...payload })
+      .setProtectedHeader({ alg: 'RSA-OAEP', enc: 'A256GCM' })
+      // .setExpirationTime(Math.floor(Date.now() / 1000) + (60 * 60)*24)
+      .encrypt(secret);
+    return token;
   }
 
-  // Qo'shimcha: Tokenni deshifrlash uchun metod
-  async decryptToken(token: string): Promise<Record<string, any>> {
-    
-      const { payload } = await jose.jwtDecrypt(token, this.secretKey);
-      return payload;
-  
+  async decryptToken(encryptedToken: string): Promise<TokenPayloadInterface> {
+    const secret = await importPKCS8(this.privateKey, 'RSA-OAEP');
+    const { payload } = await jwtDecrypt(encryptedToken, secret);
+    return payload as unknown as TokenPayloadInterface;
   }
+
+
 }
