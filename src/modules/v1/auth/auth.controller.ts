@@ -5,7 +5,7 @@ import { LoginDto } from './dto/login-dto';
 import { RegisterDto, SignupDto, VerifyOtpDto } from './dto/signup-dto';
 import { UserInterface } from './entity/user-interface';
 
-@Controller('v1/auth')
+@Controller('auth')
   // @ApiBadRequestResponse()
   @ApiInternalServerErrorResponse()
 export class AuthController {
