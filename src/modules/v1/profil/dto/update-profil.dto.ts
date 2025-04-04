@@ -81,4 +81,14 @@ export class UpdateMasterDto {
   @IsNotEmpty()
   @ApiProperty({ example: 'Uzbekistan Tashkent Amir Temur 1', description: 'address', type: 'string' })
   address: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ example: 41.311, description: 'latitude', type: 'number' })
+  latitude: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ example: 69.240, description: 'longitude', type: 'number' })
+  longitude: number;
 }
