@@ -1,11 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsArray,
+    IsArray,
     IsNotEmpty,
     IsNumber,
     IsOptional,
     IsString,
     Matches,
+    MaxLength,
+    MinLength,
 } from 'class-validator';
 
 export class UpdateProfilDto {
@@ -26,7 +28,7 @@ export class UpdateProfilDto {
     @IsString()
     @IsOptional()
     @ApiProperty({
-        example: '998991234567',
+        example: '+998991234567',
         description: 'phone',
         type: 'string',
     })
@@ -36,13 +38,8 @@ export class UpdateProfilDto {
 export class UpdatePasswordDto {
     @IsString()
     @IsNotEmpty()
-    @Matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_-])[A-Za-z\d@$!%*?&]{6,32}$/,
-        {
-            message:
-                'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
-        },
-    )
+    @MinLength(6)
+    @MaxLength(32)
     @ApiProperty({
         example: 'Baxrom123!',
         description: 'old_password',
@@ -52,22 +49,56 @@ export class UpdatePasswordDto {
 
     @IsString()
     @IsNotEmpty()
-    @Matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_-])[A-Za-z\d@$!%*?&]{6,32}$/,
-        {
-            message:
-                'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
-        },
-    )
+    @MinLength(6)
+    @MaxLength(32)
     @ApiProperty({
         example: 'Baxrom123!',
-        description: 'new_password',
+        description: 'old_password',
         type: 'string',
     })
     new_password: string;
 }
 
 export class UpdateMasterDto {
+    @IsString()
+    @IsOptional()
+    @ApiProperty({
+        example: 'Baxrom',
+        description: 'firstname',
+        type: 'string',
+        required: false,
+    })
+    @Matches(/^[A-Za-z]+$/, {
+        message: 'Firstname must contain only letters',
+    })
+    firstname?: string;
+
+    @IsString()
+    @IsOptional()
+    @ApiProperty({
+        example: 'Baxrom',
+        description: 'firstname',
+        type: 'string',
+        required: false,
+    })
+    @Matches(/^[A-Za-z]+$/, {
+        message: 'Firstname must contain only letters',
+    })
+    lastname?: string;
+
+    @IsString()
+    @IsOptional()
+    @ApiProperty({
+        example: '+998991234567',
+        description: 'phone',
+        type: 'string',
+        required: false,
+    })
+    @Matches(/^\+998\d{9}$/, {
+        message: 'Phone number must be in the format +998XXXXXXXXX',
+    })
+    phone?: string;
+
     @IsArray()
     @IsNotEmpty()
     @ApiProperty({ example: [1, 2], description: 'category_id', type: 'array' })

@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  Matches,
-  MaxLength,
-  MinLength,
+    IsEmail,
+    IsNotEmpty,
+    IsString,
+    MaxLength,
+    MinLength,
 } from 'class-validator';
 
 export class LoginDto {
@@ -19,13 +18,6 @@ export class LoginDto {
     @IsNotEmpty()
     @MinLength(6)
     @MaxLength(32)
-    @Matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_-])[A-Za-z\d@$!%*?&]{6,32}$/,
-        {
-            message:
-                'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
-        },
-    )
     @ApiProperty({ example: 'Baxrom123!', description: 'password' })
     password: string;
 }

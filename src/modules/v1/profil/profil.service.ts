@@ -97,11 +97,28 @@ export class ProfilService {
         dto: UpdateMasterDto,
         user: UserInterface,
     ): Promise<void> {
+        const {firstname , lastname , phone} = dto;
         const masterData = await db('masters')
             .where('user_id', user.id)
             .first();
+        
         if (!masterData) throw new BadRequestException('Master not found');
-        await db('masters').where('user_id', user.id).update(dto);
+
+        await db('masters').where('user_id', user.id).update({
+           category_id:dto.category_id,
+            experience:dto.experience,
+            min_price: dto.min_price,
+            max_price: dto.max_price,
+            address: dto.address,
+            latitude: dto.latitude,
+            longitude: dto.longitude,
+        });
+
+        if (firstname || lastname || phone) {
+            await db('users')
+                .where('id', user.id)
+                .update({ firstname, lastname, phone });
+        }
     }
   async updateProfilePicture(file: Express.Multer.File , user: UserInterface): Promise<void> {
     const userData = await this.authService.findById(user.id);
