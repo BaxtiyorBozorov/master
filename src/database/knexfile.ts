@@ -1,5 +1,5 @@
 // src/database/knexfile.ts
-import { join } from 'path';
+import { join  } from 'path';
 
 import * as dotenv from 'dotenv';
 import knex from 'knex';

@@ -5,7 +5,7 @@ export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable('masters', table => {
     table.increments('id').primary()
     table.integer('user_id').references('users.id').onDelete('CASCADE')
-    table.integer('category_id').references('categories.id').onDelete('CASCADE')
+    table.specificType('category_id' , 'integer[]').nullable().defaultTo(null)
     table.smallint('experience').nullable().defaultTo(null)
     table.smallint('rating').nullable().defaultTo(null)
     table.integer('min_price').nullable().defaultTo(null)
