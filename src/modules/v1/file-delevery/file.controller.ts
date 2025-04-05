@@ -1,8 +1,9 @@
+import { join } from "path";
+import * as fs from 'fs'
+
 import { Controller, Get, Param, Res } from "@nestjs/common";
 import { Response } from 'express';
 import { ApiParam } from "@nestjs/swagger";
-import { join } from "path";
-import * as fs from 'fs'
 
 
 @Controller('file')

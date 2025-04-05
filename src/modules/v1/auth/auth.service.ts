@@ -5,6 +5,7 @@ import {
   generateHashedPassword,
 } from 'src/common/utils/bycrypt.functions';
 import db from 'src/config/database.config';
+
 import { MailService } from '../mail/mail.service';
 import { LoginDto } from './dto/login-dto';
 import { RegisterDto, SignupDto } from './dto/signup-dto';

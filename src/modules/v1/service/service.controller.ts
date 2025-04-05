@@ -1,10 +1,11 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth-guard';
+import { Roles } from 'src/common/decorator/roles-decorators';
+
 import { UserInterface } from '../auth/entity/user-interface';
 import { CreateServiceDto } from './dto/service.dto';
 import { ServiceService } from './service.service';
-import { Roles } from 'src/common/decorator/roles-decorators';
 
 @Controller('service')
 @UseGuards(JwtAuthGuard)

@@ -1,7 +1,8 @@
+import { extname, join } from 'path';
+
 import { BadRequestException } from '@nestjs/common';
 import { MulterModuleOptions } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { extname, join } from 'path';
 
 export function pictureUploadConfig(): MulterModuleOptions {
   return {

@@ -1,9 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { VersioningType } from '@nestjs/common';
+
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/all-exception-filter';
 import { HttpExceptionFilter } from './common/filters/http-exception-filter';
-import { VersioningType } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

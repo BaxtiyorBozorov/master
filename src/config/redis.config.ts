@@ -1,4 +1,5 @@
 import { createClient } from 'redis';
+
 import { ENV } from './env';
 
 const redisClient = createClient({

@@ -4,6 +4,7 @@ import {
     generateHashedPassword,
 } from 'src/common/utils/bycrypt.functions';
 import db from 'src/config/database.config';
+
 import { AuthService } from '../auth/auth.service';
 import { MasterInterface, UserInterface } from '../auth/entity/user-interface';
 import {
@@ -59,23 +60,25 @@ export class ProfilService {
 
             return {
                 user_id: user.id,
-                master_id: masterData.id,
-                firstname: userData.firstname,
-                lastname: userData.lastname,
-                role: userData.role,
-                email: userData.email,
-                phone: userData.phone,
-                avatar: userData.avatar,
-                category_id: masterData.category_id,
-                experience: masterData.experience,
-                rating: masterData.rating,
-                min_price: masterData.min_price,
-                max_price: masterData.max_price,
-                address: masterData.address,
-                latitude: masterData.latitude,
-                longitude: masterData.longitude,
-                created_at: masterData.created_at,
-                updated_at: masterData.updated_at,
+                ...userData, 
+                ...masterData
+                // master_id: masterData.id,
+                // firstname: userData.firstname,
+                // lastname: userData.lastname,
+                // role: userData.role,
+                // email: userData.email,
+                // phone: userData.phone,
+                // avatar: userData.avatar,
+                // category_id: masterData.category_id,
+                // experience: masterData.experience,
+                // rating: masterData.rating,
+                // min_price: masterData.min_price,
+                // max_price: masterData.max_price,
+                // address: masterData.address,
+                // latitude: masterData.latitude,
+                // longitude: masterData.longitude,
+                // created_at: masterData.created_at,
+                // updated_at: masterData.updated_at,
             };
         }
 

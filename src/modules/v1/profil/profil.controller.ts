@@ -28,6 +28,7 @@ import {
 } from 'src/common/swagger/common-errors';
 import { swaggerUploadPicture } from 'src/common/swagger/swagger.document';
 import { pictureUploadConfig } from 'src/config/picture.upload.config';
+
 import { UserInterface } from '../auth/entity/user-interface';
 import {
     UpdateMasterDto,
@@ -83,7 +84,7 @@ export class ProfilController {
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
         summary: 'Update profile picture',
-        description: 'Update the profile picture of the user',
+        description: "Only 'png', 'jpg', 'jpeg', 'image' formats",
     })
     @ApiConsumes('multipart/form-data')
     @ApiBody(swaggerUploadPicture)

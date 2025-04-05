@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { BaseService } from 'src/common/utils/base.service';
 import db from 'src/config/database.config';
+
 import { UserInterface } from '../auth/entity/user-interface';
 import { CreateServiceDto } from './dto/service.dto';
 import { ServiceInterface } from './entity/service.interface';
