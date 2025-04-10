@@ -15,7 +15,18 @@ export default [
                 project: './tsconfig.json',
                 tsconfigRootDir: process.cwd(),
             },
+            globals: {
+                // Node.js global o'zgaruvchilarini qo'shish
+                process: 'readonly',
+                __dirname: 'readonly',
+                module: 'readonly',
+                require: 'readonly',
+                exports: 'readonly',
+                setTimeout: 'readonly',
+                Express: 'readonly',
+            },
         },
+
         plugins: {
             '@typescript-eslint': tseslint,
             import: importPlugin,
@@ -43,12 +54,17 @@ export default [
                 {
                     selector: ['variable', 'function'],
                     format: ['camelCase'],
+                    filter: {
+                        regex: '^(Roles|ApiUnauthorizedResponse|ApiNotFoundResponse|ApiBadRequestResponse|ApiInternalServerErrorResponse|ApiSuccessResponse|ApiCreatedResponse|ApiForbiddenResponse)$',
+                        match: false,
+                    },
                     leadingUnderscore: 'allow',
                 },
-                { selector: ['class'], format: ['PascalCase'] },
+                { selector: 'class', format: ['PascalCase'] },
                 {
                     selector: 'variable',
                     modifiers: ['const', 'global'],
+                    types: ['boolean', 'string', 'number'],
                     format: ['UPPER_CASE'],
                     leadingUnderscore: 'allow',
                 },

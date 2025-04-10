@@ -19,7 +19,7 @@ export function pictureUploadConfig(): MulterModuleOptions {
               );
           },
       }),
-      fileFilter: (req, file, cb) => {
+      fileFilter: (req, file, cb):void => {
           if (file.fieldname === 'icon') {
               const allowedFileTypes = ['png', 'jpg', 'jpeg', 'image'];
               if (!allowedFileTypes.includes(file.mimetype.split('/')[1])) {
