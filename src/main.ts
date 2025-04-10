@@ -1,4 +1,4 @@
-import { VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
@@ -29,6 +29,9 @@ async function bootstrap(): Promise<void> {
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
         allowedHeaders: '*',
     });
+    app.useGlobalPipes(
+        new ValidationPipe({ transform: true, whitelist: true }),
+    );
     app.useGlobalInterceptors(new ResponseTransformInterceptor());
     app.useGlobalFilters(new HttpExceptionFilter(), new AllExceptionsFilter());
     await app.listen(process.env.PORT ?? 3000);

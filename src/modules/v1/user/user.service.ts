@@ -73,4 +73,24 @@ export class UserService {
 
         return result;
     }
+
+    async findNearest(lat: number, lng: number):Promise<{data: Partial<UserInterface & MasterInterface>[]}> {
+        const result = await db('masters')
+            .select(
+                '*',
+                db.raw(
+                    `
+      6371 * acos(
+        cos(radians(?)) * cos(radians(CAST(latitude AS FLOAT))) * 
+        cos(radians(CAST(longitude AS FLOAT)) - radians(?)) + 
+        sin(radians(?)) * sin(radians(CAST(latitude AS FLOAT)))
+      ) AS distance
+    `,
+                    [lat, lng, lat],
+                ),
+            )
+          .orderBy('distance')
+      
+      return {data: result}
+    }
 }

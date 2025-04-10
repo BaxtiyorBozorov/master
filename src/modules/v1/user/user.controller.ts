@@ -1,5 +1,5 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { ApiParam } from '@nestjs/swagger';
+import { Controller, Get, Param, Query } from '@nestjs/common';
+import { ApiParam, ApiQuery } from '@nestjs/swagger';
 
 import { MasterInterface, UserInterface } from '../auth/entity/user-interface';
 import { UserService } from './user.service';
@@ -10,11 +10,11 @@ export class UserController {
 
     @Get('get-all-masters')
     async getAllMasters(): Promise<{
-      data: Partial<UserInterface & MasterInterface>[];
+        data: Partial<UserInterface & MasterInterface>[];
     }> {
-      return this.userService.getAllMasters();
+        return this.userService.getAllMasters();
     }
-  
+
     @Get('masters-by-category-id/:id')
     @ApiParam({
         name: 'id',
@@ -35,5 +35,19 @@ export class UserController {
         @Param('id') id: string,
     ): Promise<Partial<UserInterface & MasterInterface>> {
         return this.userService.getMasterById(id);
+    }
+
+    @Get('masters/nearest')
+    @ApiQuery({
+        name: 'lat',
+    })
+    @ApiQuery({ name: 'lng' })
+    async findNeares(
+        @Query('lat') lat: number,
+        @Query('lng') lng: number,
+    ): Promise<{
+        data: Partial<UserInterface & MasterInterface>[];
+    }> {
+        return this.userService.findNearest(lat, lng);
     }
 }
