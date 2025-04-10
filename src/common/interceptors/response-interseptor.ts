@@ -18,7 +18,7 @@ export class ResponseTransformInterceptor<T>
     ): Observable<{ success: boolean; data: T; timestamp: string }> {
         return next.handle().pipe(
             map((data) => ({
-                success: true,
+                status: 'success',
                 ...data,
                 timestamp: new Date(Date.now() + 5 * 60 * 60 * 1000)
                     .toISOString()
