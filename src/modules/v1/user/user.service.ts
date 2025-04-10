@@ -5,7 +5,7 @@ import { MasterInterface, UserInterface } from '../auth/entity/user-interface';
 
 @Injectable()
 export class UserService {
-    async getAllMasters(
+    async getAllMastersByCategoryId(
         categoryId: string,
     ): Promise<{ data: Partial<UserInterface & MasterInterface>[] }> {
         const category = await db('categories').where('id', categoryId).first();
@@ -23,6 +23,27 @@ export class UserService {
                 'users.avatar',
             )
             .whereRaw('? = ANY(category_id)', [categoryId])
+            .join('users', 'masters.user_id', '=', 'users.id');
+
+        return {
+            data: result,
+        };
+    }
+
+    async getAllMasters(): Promise<{
+        data: Partial<UserInterface & MasterInterface>[];
+    }> {
+        const result = await db('masters')
+            .select(
+                'users.id as id',
+                'users.firstname',
+                'users.lastname',
+                'users.phone',
+                'masters.experience',
+                'masters.rating_avg',
+                'masters.category_id',
+                'users.avatar',
+            )
             .join('users', 'masters.user_id', '=', 'users.id');
 
         return {

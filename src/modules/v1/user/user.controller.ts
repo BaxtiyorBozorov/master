@@ -8,7 +8,14 @@ import { UserService } from './user.service';
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
-    @Get('get-all-masters/:id')
+    @Get('get-all-masters')
+    async getAllMasters(): Promise<{
+      data: Partial<UserInterface & MasterInterface>[];
+    }> {
+      return this.userService.getAllMasters();
+    }
+  
+    @Get('masters-by-category-id/:id')
     @ApiParam({
         name: 'id',
         description: 'Category ID',
@@ -16,7 +23,7 @@ export class UserController {
     async createUser(
         @Param('id') categoryId: string,
     ): Promise<{ data: Partial<UserInterface & MasterInterface>[] }> {
-        return this.userService.getAllMasters(categoryId);
+        return this.userService.getAllMastersByCategoryId(categoryId);
     }
 
     @Get('get-master-by-id/:id')
