@@ -44,6 +44,7 @@ export class UserService {
                 'masters.category_id',
                 'users.avatar',
             )
+            .whereNotNull('masters.experience')
             .join('users', 'masters.user_id', '=', 'users.id');
 
         return {
@@ -66,6 +67,7 @@ export class UserService {
                 'users.avatar',
             )
             .where('users.id', id)
+            .whereNotNull('masters.experience')
             .join('users', 'masters.user_id', '=', 'users.id')
             .first();
 
@@ -74,7 +76,10 @@ export class UserService {
         return result;
     }
 
-    async findNearest(lat: number, lng: number):Promise<{data: Partial<UserInterface & MasterInterface>[]}> {
+    async findNearest(
+        lat: number,
+        lng: number,
+    ): Promise<{ data: Partial<UserInterface & MasterInterface>[] }> {
         const result = await db('masters')
             .select(
                 '*',
@@ -89,8 +94,8 @@ export class UserService {
                     [lat, lng, lat],
                 ),
             )
-          .orderBy('distance')
-      
-      return {data: result}
+            .orderBy('distance');
+
+        return { data: result };
     }
 }
