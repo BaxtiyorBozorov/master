@@ -13,7 +13,14 @@ export class AdminService {
         masters: Partial<UserInterface & MasterInterface>[];
     }> {
         const users = await db('users')
-            .select('users.id as id', 'users.firstname', 'users.lastname' , 'users.phone' , 'users.avatar', 'users.role')
+            .select(
+                'users.id as id',
+                'users.firstname',
+                'users.lastname',
+                'users.phone',
+                'users.avatar',
+                'users.role',
+            )
             .where('users.role', 'user');
 
         const masters = await db('users')
@@ -48,12 +55,40 @@ export class AdminService {
 
     async createAdmin(data: CreateAdminDto): Promise<{ message: string }> {
         data.password = await generateHashedPassword(data.password);
-      data.role = 'admin';
-      console.log(data);
-      
+        data.role = 'admin';
+        console.log(data);
 
-        await db('users').insert(data)
+        await db('users').insert(data);
 
         return { message: 'Admin created successfully' };
+    }
+
+    async getAllAdmins(): Promise<{
+        admins: Partial<UserInterface>[];
+    }> {
+        const admins = await db('users')
+            .select(
+                'users.id as id',
+                'users.firstname',
+                'users.lastname',
+                'users.phone',
+                'users.avatar',
+                'users.role',
+            )
+          .where('users.role', 'admin');
+      
+      console.log(admins );
+      
+      return {
+          admins: admins,
+        };
+    }
+    async deleteAdminById(id: number): Promise<{ message: string }> {
+        const admin = await db('users').where('id', id).first();
+        if (!admin) {
+            throw new NotFoundException('Admin not found');
+        }
+        await db('users').where('id', id).delete();
+        return { message: 'Admin deleted successfully' };
     }
 }

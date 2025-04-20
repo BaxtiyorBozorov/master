@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { Roles } from 'src/common/decorator/roles-decorators';
+import { Role } from 'src/common/enums/role.enums';
 import { RolesGuard } from 'src/common/guards/auth-role-guard';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth-guard';
 import {
@@ -22,7 +23,6 @@ import {
 import { MasterInterface, UserInterface } from '../auth/entity/user-interface';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.input';
-import { Role } from 'src/common/enums/role.enums';
 
 @Controller('admin')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -74,5 +74,31 @@ export class AdminController {
         @Body(new ValidationPipe()) dto: CreateAdminDto,
     ): Promise<{ message: string }> {
         return this.adminService.createAdmin(dto);
+    }
+
+    @Get('get-all-admins')
+    @Roles(Role.superAdmin)
+    @ApiOperation({
+        summary: 'Get all admins',
+        description: 'Only super admin can get all admins',
+    })
+    async getAllAdmins(): Promise<{
+        admins: Partial<UserInterface>[];
+    }> {
+        return this.adminService.getAllAdmins();
+    }
+    @Delete('delete-admin/:id')
+    @ApiParam({
+        name: 'id',
+        description: 'Admin ID',
+        required: true,
+    })
+    @Roles(Role.superAdmin)
+    @ApiOperation({
+        summary: 'Delete an admin',
+        description: 'Only super admin can delete an admin',
+    })
+    async deleteAdmin(@Param('id') id: number): Promise<{ message: string }> {
+        return this.adminService.deleteAdminById(Number(id));
     }
 }
