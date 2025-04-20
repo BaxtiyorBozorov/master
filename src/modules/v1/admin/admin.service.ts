@@ -7,7 +7,7 @@ import { CreateAdminDto } from './dto/create-admin.input';
 @Injectable()
 export class AdminService {
     constructor() {}
-
+    
     async getAllUsers(): Promise<{
         users: Partial<UserInterface>[];
         masters: Partial<UserInterface & MasterInterface>[];
@@ -49,9 +49,11 @@ export class AdminService {
 
     async createAdmin(data: CreateAdminDto): Promise<{ message: string }> {
         data.password = await generateHashedPassword(data.password);
-        data.role = 'admin';
+      data.role = 'admin';
+      console.log(data);
+      
 
-        await db.insert(data);
+        await db('users').insert(data)
 
         return { message: 'Admin created successfully' };
     }

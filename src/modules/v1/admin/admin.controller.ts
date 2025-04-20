@@ -8,12 +8,11 @@ import {
     UseGuards,
     ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { Roles } from 'src/common/decorator/roles-decorators';
 import { RolesGuard } from 'src/common/guards/auth-role-guard';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth-guard';
 import {
-    ApiAuth,
     ApiBadRequestResponse,
     ApiForbiddenResponse,
     ApiInternalServerErrorResponse,
@@ -26,7 +25,7 @@ import { CreateAdminDto } from './dto/create-admin.input';
 
 @Controller('admin')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@ApiAuth()
+@ApiBearerAuth()
 @ApiUnauthorizedResponse()
 @ApiBadRequestResponse()
 @ApiNotFoundResponse()
@@ -34,7 +33,14 @@ import { CreateAdminDto } from './dto/create-admin.input';
 @ApiInternalServerErrorResponse()
 export class AdminController {
     constructor(private readonly adminService: AdminService) {}
+
     @Get('get-all-users')
+    @Roles('admin', 'super_admin')
+    @ApiOperation({
+        summary: 'Get all users',
+        description:
+            'Get all users and masters , only super admin or admin can access this',
+    })
     getAllUsers(): Promise<{
         users: Partial<UserInterface>[];
         masters: Partial<UserInterface & MasterInterface>[];
@@ -47,6 +53,11 @@ export class AdminController {
         name: 'id',
         description: 'User ID',
         required: true,
+    })
+    @Roles('admin', 'super_admin')
+    @ApiOperation({
+        summary: 'Delete a user',
+        description: 'Only super admin or admin can delete a user',
     })
     async deleteUser(@Param('id') id: number): Promise<{ message: string }> {
         return this.adminService.deleteUserById(Number(id));
