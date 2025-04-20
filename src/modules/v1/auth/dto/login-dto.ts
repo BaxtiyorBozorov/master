@@ -11,13 +11,13 @@ export class LoginDto {
     @IsEmail()
     @IsString()
     @IsNotEmpty()
-    @ApiProperty({ example: 'baxrom@gmail.com', description: 'email' })
+    @ApiProperty({ example: 'superAdmin@gmail.com', description: 'email' })
     email: string;
 
     @IsString()
     @IsNotEmpty()
     @MinLength(6)
     @MaxLength(32)
-    @ApiProperty({ example: 'Baxrom123!', description: 'password' })
+    @ApiProperty({ example: 'super admin', description: 'password' })
     password: string;
 }
