@@ -22,6 +22,7 @@ import {
 import { MasterInterface, UserInterface } from '../auth/entity/user-interface';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.input';
+import { Role } from 'src/common/enums/role.enums';
 
 @Controller('admin')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -35,7 +36,7 @@ export class AdminController {
     constructor(private readonly adminService: AdminService) {}
 
     @Get('get-all-users')
-    @Roles('admin', 'super_admin')
+    @Roles(Role.admin, Role.superAdmin)
     @ApiOperation({
         summary: 'Get all users',
         description:
@@ -54,7 +55,7 @@ export class AdminController {
         description: 'User ID',
         required: true,
     })
-    @Roles('admin', 'super_admin')
+    @Roles(Role.admin, Role.superAdmin)
     @ApiOperation({
         summary: 'Delete a user',
         description: 'Only super admin or admin can delete a user',
@@ -64,7 +65,7 @@ export class AdminController {
     }
 
     @Post('create-admin')
-    @Roles('super_admin')
+    @Roles(Role.superAdmin)
     @ApiOperation({
         summary: 'Create a new admin',
         description: 'Only super admin can create a new admin',

@@ -7,13 +7,13 @@ import { CreateAdminDto } from './dto/create-admin.input';
 @Injectable()
 export class AdminService {
     constructor() {}
-    
+
     async getAllUsers(): Promise<{
         users: Partial<UserInterface>[];
         masters: Partial<UserInterface & MasterInterface>[];
     }> {
         const users = await db('users')
-            .select('users.id as id', 'users.firstname', 'users.lastname')
+            .select('users.id as id', 'users.firstname', 'users.lastname' , 'users.phone' , 'users.avatar', 'users.role')
             .where('users.role', 'user');
 
         const masters = await db('users')
@@ -26,7 +26,6 @@ export class AdminService {
                 'users.role',
                 'masters.experience',
                 'masters.rating_avg',
-                'masters.category_id',
             )
             .whereNotNull('masters.experience')
             .whereNotNull('users.role')
