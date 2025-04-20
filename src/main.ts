@@ -34,6 +34,8 @@ async function bootstrap(): Promise<void> {
     );
     app.useGlobalInterceptors(new ResponseTransformInterceptor());
     app.useGlobalFilters(new HttpExceptionFilter(), new AllExceptionsFilter());
-    await app.listen(process.env.PORT ?? 3000);
+    await app.listen(process.env.PORT ?? 3000, () => {
+        console.log(`Server is running swagger in => http://localhost:${process.env.PORT ?? 3000}/api`);
+    });
 }
 void bootstrap();
