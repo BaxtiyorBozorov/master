@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    ForbiddenException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { generateHashedPassword } from 'src/common/utils/bycrypt.functions';
 import db from 'src/config/database.config';
 import { MasterInterface, UserInterface } from '../auth/entity/user-interface';
@@ -49,6 +53,12 @@ export class AdminService {
         if (!user) {
             throw new NotFoundException('User not found');
         }
+        if (user.role === 'admin' || user.role === 'super_admin') {
+            throw new ForbiddenException(
+                'You cannot delete an admin or super admin',
+            );
+        }
+
         await db('users').where('id', id).delete();
         return { message: 'User deleted successfully' };
     }
@@ -75,12 +85,11 @@ export class AdminService {
                 'users.avatar',
                 'users.role',
             )
-          .where('users.role', 'admin');
-      
-      console.log(admins );
-      
-      return {
-          admins: admins,
+            .where('users.role', 'admin');
+
+
+        return {
+            admins: admins,
         };
     }
     async deleteAdminById(id: number): Promise<{ message: string }> {
@@ -90,5 +99,43 @@ export class AdminService {
         }
         await db('users').where('id', id).delete();
         return { message: 'Admin deleted successfully' };
+    }
+
+    async givePremiumToMaster(id: number, days: number) {
+        const master = await db('masters').where('user_id', id).first();
+
+        if (!master) {
+            throw new NotFoundException('Master not found');
+        }
+        if (master.is_premium) {
+            throw new ForbiddenException('Master already has premium');
+        }
+        if (days < 1) {
+            throw new ForbiddenException('Days must be greater than 0');
+        }
+        if (days > 30) {
+            throw new ForbiddenException('Days must be less than 30');
+        }
+        await db('masters')
+            .where('user_id', id)
+            .update({
+                is_premium: true,
+                premium_until: this.calculatePremiumEndDate(days),
+            });
+        return { message: 'Premium granted successfully' };
+    }
+    async revokePremiumFromMaster(id: number) {
+        await db('masters').where('user_id', id).update({
+            is_premium: false,
+            premium_until: null,
+        });
+        return { message: 'Premium revoked successfully' };
+    }
+
+    private calculatePremiumEndDate(days: number): Date {
+        const currentDate = new Date();
+        const endDate = new Date(currentDate);
+        endDate.setDate(currentDate.getDate() + days);
+        return endDate;
     }
 }

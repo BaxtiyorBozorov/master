@@ -45,7 +45,11 @@ export class UserService {
                 'users.avatar',
             )
             .whereNotNull('masters.experience')
-            .join('users', 'masters.user_id', '=', 'users.id');
+            .join('users', 'masters.user_id', '=', 'users.id').orderByRaw(`CASE 
+                             WHEN masters.is_premium = true AND masters.premium_until > NOW() THEN 0
+                             ELSE 1
+                        END,    
+                            masters.id DESC`);
 
         return {
             data: result,

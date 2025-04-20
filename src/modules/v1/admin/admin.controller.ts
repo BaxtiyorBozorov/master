@@ -5,10 +5,17 @@ import {
     Get,
     Param,
     Post,
+    Put,
+    Query,
     UseGuards,
     ValidationPipe,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiParam } from '@nestjs/swagger';
+import {
+    ApiBearerAuth,
+    ApiOperation,
+    ApiParam,
+    ApiQuery,
+} from '@nestjs/swagger';
 import { Roles } from 'src/common/decorator/roles-decorators';
 import { Role } from 'src/common/enums/role.enums';
 import { RolesGuard } from 'src/common/guards/auth-role-guard';
@@ -100,5 +107,44 @@ export class AdminController {
     })
     async deleteAdmin(@Param('id') id: number): Promise<{ message: string }> {
         return this.adminService.deleteAdminById(Number(id));
+    }
+
+    @Put('give-premium/:id')
+    @Roles(Role.superAdmin, Role.admin)
+    @ApiParam({
+        name: 'id',
+        description: 'Master ID',
+        required: true,
+    })
+    @ApiOperation({
+        summary: 'Give premium to a master',
+        description: 'Only super admin or admin can give premium to a master',
+    })
+    @ApiQuery({
+        name: 'days',
+        required: true,
+        description:
+            'Number of days to give premium for days more than 0 and less than 30',
+    })
+    async givePremium(
+        @Param('id') id: number,
+        @Query('days') days: number,
+    ): Promise<{ message: string }> {
+        return this.adminService.givePremiumToMaster(Number(id), days);
+    }
+
+    @Put('revoke-premium/:id')
+    @ApiParam({
+        name: 'id',
+        description: 'Master ID',
+        required: true,
+    })
+    @Roles(Role.superAdmin, Role.admin)
+    @ApiOperation({
+        summary: 'Revoke premium from a master',
+        description: 'Only super admin can revoke premium from a master',
+    })
+    async revokePremium(@Param('id') id: number): Promise<{ message: string }> {
+        return this.adminService.revokePremiumFromMaster(Number(id));
     }
 }
