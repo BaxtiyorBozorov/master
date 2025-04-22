@@ -43,9 +43,12 @@ export class UserService {
                 'masters.rating_avg',
                 'masters.category_id',
                 'users.avatar',
+                'masters.is_premium',
+                'masters.premium_until',
             )
             .whereNotNull('masters.experience')
-            .join('users', 'masters.user_id', '=', 'users.id').orderByRaw(`CASE 
+            .join('users', 'masters.user_id', '=', 'users.id')
+            .orderByRaw(`CASE 
                              WHEN masters.is_premium = true AND masters.premium_until > NOW() THEN 0
                              ELSE 1
                         END,    
