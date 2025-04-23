@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { generateHashedPassword } from 'src/common/utils/bycrypt.functions';
 import db from 'src/config/database.config';
+
 import { MasterInterface, UserInterface } from '../auth/entity/user-interface';
 import { CreateAdminDto } from './dto/create-admin.input';
 
@@ -35,6 +36,8 @@ export class AdminService {
                 'users.phone',
                 'users.avatar',
                 'users.role',
+                'masters.is_premium',
+                'masters.premium_until',
                 'masters.experience',
                 'masters.rating_avg',
             )
@@ -66,8 +69,6 @@ export class AdminService {
     async createAdmin(data: CreateAdminDto): Promise<{ message: string }> {
         data.password = await generateHashedPassword(data.password);
         data.role = 'admin';
-        console.log(data);
-
         await db('users').insert(data);
 
         return { message: 'Admin created successfully' };
@@ -86,7 +87,6 @@ export class AdminService {
                 'users.role',
             )
             .where('users.role', 'admin');
-
 
         return {
             admins: admins,

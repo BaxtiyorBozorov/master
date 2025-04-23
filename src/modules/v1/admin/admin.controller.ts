@@ -27,9 +27,11 @@ import {
     ApiNotFoundResponse,
     ApiUnauthorizedResponse,
 } from 'src/common/swagger/common-errors';
+
 import { MasterInterface, UserInterface } from '../auth/entity/user-interface';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.input';
+import { GivePremiumQueryDto } from './dto/give-premium.input';
 
 @Controller('admin')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -49,7 +51,7 @@ export class AdminController {
         description:
             'Get all users and masters , only super admin or admin can access this',
     })
-    getAllUsers(): Promise<{
+    async getAllUsers(): Promise<{
         users: Partial<UserInterface>[];
         masters: Partial<UserInterface & MasterInterface>[];
     }> {
@@ -128,7 +130,8 @@ export class AdminController {
     })
     async givePremium(
         @Param('id') id: number,
-        @Query('days') days: number,
+        @Query(new ValidationPipe({ transform: true, whitelist: true }))
+        { days }: GivePremiumQueryDto,
     ): Promise<{ message: string }> {
         return this.adminService.givePremiumToMaster(Number(id), days);
     }
